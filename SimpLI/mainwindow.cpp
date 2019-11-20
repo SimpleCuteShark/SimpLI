@@ -8,6 +8,9 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    QTimer* playBackTimer = new QTimer(this);
+    connect(playBackTimer, SIGNAL(timeout()), this, SLOT(PlaybackStep()));
+    playBackTimer->start(50);
 }
 
 MainWindow::~MainWindow()
@@ -15,7 +18,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::PlaybackStep()
 {
     ui->widget->clearGraphs();
     ui->widget->clearItems();
@@ -72,43 +75,29 @@ void MainWindow::on_pushButton_clicked()
         gradient.setColorAt(1, QColor(70, 70, 70));
         ui->widget->setBackground(QBrush(gradient));
 
-        // create empty bar chart objects:
         QCPBars *data = new QCPBars(ui->widget->xAxis, ui->widget->yAxis);
         data->setName("Regenerative");
         data->setPen(QPen(QColor(0, 0, 255).lighter(130)));
         data->setBrush(QColor(0, 0, 122));
 
-        // prepare x axis with country labels:
         QVector<double> ticks;
-        //QVector<QString> labels;
         ticks << 1 << 2 << 3 << 4 << 5 << 6 << 7 << 8 << 9 << 10;
-        //labels << "USA" << "Japan" << "Germany" << "France" << "UK" << "Italy" << "Canada";
         QSharedPointer<QCPAxisTickerText> textTicker(new QCPAxisTickerText);
-        //textTicker->addTicks(ticks, labels);
         ui->widget->xAxis->setTicker(textTicker);
-        ui->widget->xAxis->setTickLabelRotation(60);
-        //ui->widget->xAxis->setSubTicks(false);
-        //ui->widget->xAxis->setTickLength(0, 4);
+
         ui->widget->xAxis->setRange(minX, maxX);
+        ui->widget->yAxis->setRange(minY, maxY);
+
         ui->widget->xAxis->setBasePen(QPen(Qt::white));
         ui->widget->xAxis->setTickPen(QPen(Qt::white));
-        //ui->widget->xAxis->grid()->setVisible(true);
-        //ui->widget->xAxis->grid()->setPen(QPen(QColor(130, 130, 130), 0, Qt::DotLine));
         ui->widget->xAxis->setTickLabelColor(Qt::white);
         ui->widget->xAxis->setLabelColor(Qt::white);
-
-        // prepare y axis:
-        ui->widget->yAxis->setRange(minY, maxY);
-        //ui->widget->yAxis->setPadding(5); // a bit more space to the left border
-        //ui->widget->yAxis->setLabel("Power Consumption in\nKilowatts per Capita (2007)");
         ui->widget->yAxis->setBasePen(QPen(Qt::white));
         ui->widget->yAxis->setTickPen(QPen(Qt::white));
         ui->widget->yAxis->setSubTickPen(QPen(Qt::white));
-        //ui->widget->yAxis->grid()->setSubGridVisible(true);
         ui->widget->yAxis->setTickLabelColor(Qt::white);
         ui->widget->yAxis->setLabelColor(Qt::white);
-        //ui->widget->yAxis->grid()->setPen(QPen(QColor(130, 130, 130), 0, Qt::SolidLine));
-        //ui->widget->yAxis->grid()->setSubGridPen(QPen(QColor(130, 130, 130), 0, Qt::DotLine));
+
 
         data->setData(ticks, x);
     }

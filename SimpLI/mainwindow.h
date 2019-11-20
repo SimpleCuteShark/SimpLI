@@ -18,13 +18,9 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_pushButton_clicked();
-    //QCPCurve *verticalLine;     // Объявляем объект для вертикальной линии
-    //QCPItemTracer *tracer;      // Трасировщик по точкам графика
+    void PlaybackStep();
 
 private:
     Ui::MainWindow *ui;
-    void slotMousePress(QMouseEvent * event);
-    void slotMouseMove(QMouseEvent * event);
 };
 #endif // MAINWINDOW_H
