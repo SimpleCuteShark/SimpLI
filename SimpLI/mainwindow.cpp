@@ -2,7 +2,7 @@
 #include "ui_mainwindow.h"
 #include <qcustomplot.h>
 #include <QDebug>
-
+int GraphType = 0;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -55,10 +55,10 @@ void MainWindow::PlaybackStep()
     ui->widget->xAxis->setLabel("x");
     ui->widget->yAxis->setLabel("y");
 
-    if (ui->radioButton->isChecked()) {
+    if (GraphType == 0) {
         ui->widget->addGraph();
         ui->widget->graph(0)->setData(x, y);
-    } else if (ui->radioButton_2->isChecked()) {
+    } else if (GraphType == 1) {
         ui->widget->addGraph();
         ui->widget->graph(0)->setData(x, y);
 
@@ -66,7 +66,7 @@ void MainWindow::PlaybackStep()
         ui->widget->graph(0)->setLineStyle(QCPGraph::lsNone);
         ui->widget->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 4));
 
-    } else if (ui->radioButton_3->isChecked()) {
+    } else if (GraphType == 2) {
 
         // set dark background gradient:
         QLinearGradient gradient(0, 0, 0, 400);
@@ -81,7 +81,9 @@ void MainWindow::PlaybackStep()
         data->setBrush(QColor(0, 0, 122));
 
         QVector<double> ticks;
-        ticks << 1 << 2 << 3 << 4 << 5 << 6 << 7 << 8 << 9 << 10;
+        for(int i = 1; i<=cout; i++) {
+            ticks[i] = i;
+        }
         QSharedPointer<QCPAxisTickerText> textTicker(new QCPAxisTickerText);
         ui->widget->xAxis->setTicker(textTicker);
 
@@ -102,4 +104,16 @@ void MainWindow::PlaybackStep()
         data->setData(ticks, x);
     }
     ui->widget->replot();
+}
+
+Settings::Settings(QWidget *parent) QDialog(parent), ui(new Ui::dialog){
+    if (ui->radiobutton->isChecked()) {
+        GraphType = 0;
+    } else if (ui->radiobutton_2->isChecked()) {
+        GraphType = 1;
+    } else if (ui->radiobutton_3->isChecked()) {
+        GraphType = 2;
+    } else if (ui->radiobutton_4->isChecked()) {
+        GraphType = 3;
+    }
 }
